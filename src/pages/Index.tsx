@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -8,96 +8,123 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Icon from '@/components/ui/icon';
 
 const Index = () => {
-  const [selectedType, setSelectedType] = useState<string>('all');
-  const [selectedBrand, setSelectedBrand] = useState<string>('all');
-  const [selectedPower, setSelectedPower] = useState<string>('all');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedService, setSelectedService] = useState<string>('all');
+  const [selectedCity, setSelectedCity] = useState<string>('all');
+  const [selectedRating, setSelectedRating] = useState<string>('all');
+  const [selectedPrice, setSelectedPrice] = useState<string>('all');
 
-  const equipment = [
+  const companies = [
     {
       id: 1,
-      name: 'Пылесос промышленный VacMaster Pro 2000',
-      type: 'vacuum',
-      brand: 'VacMaster',
-      power: '2000W',
-      price: '85 000 ₽',
-      image: '/img/99844afe-98ee-4caa-9aae-484a64438351.jpg',
-      description: 'Профессиональный пылесос для сухой и влажной уборки'
+      name: 'ЧистоДом Профи',
+      rating: 4.9,
+      reviewCount: 156,
+      price: 'от 1 500 ₽',
+      specialization: 'Квартиры и дома',
+      city: 'Москва',
+      services: ['Генеральная уборка', 'Поддерживающая уборка', 'После ремонта'],
+      image: '/img/d9d294e4-a686-4a27-bf74-cb58022f97b2.jpg',
+      verified: true,
+      responseTime: '15 мин',
+      completedOrders: 450
     },
     {
       id: 2,
-      name: 'Поломоечная машина CleanBot X1',
-      type: 'scrubber',
-      brand: 'CleanBot',
-      power: '1500W',
-      price: '165 000 ₽',
-      image: '/img/629e9727-15b3-46d9-9f7d-c3c03f6a44dd.jpg',
-      description: 'Автоматическая поломоечная машина для больших площадей'
+      name: 'Офис Клин Сервис',
+      rating: 4.8,
+      reviewCount: 89,
+      price: 'от 2 000 ₽',
+      specialization: 'Офисы и коммерция',
+      city: 'Москва',
+      services: ['Ежедневная уборка офисов', 'Мойка окон', 'Химчистка мебели'],
+      image: '/img/fede2a7f-2755-4d3d-80d9-d718dc51273a.jpg',
+      verified: true,
+      responseTime: '30 мин',
+      completedOrders: 320
     },
     {
       id: 3,
-      name: 'Экстрактор ковровый CarpetMax Elite',
-      type: 'extractor',
-      brand: 'CarpetMax',
-      power: '1800W',
-      price: '125 000 ₽',
-      image: '/img/af264972-8994-478d-97cf-fb07055cec57.jpg',
-      description: 'Профессиональный экстрактор для чистки ковровых покрытий'
+      name: 'ИндустриКлин',
+      rating: 4.7,
+      reviewCount: 67,
+      price: 'от 5 000 ₽',
+      specialization: 'Промышленные объекты',
+      city: 'Санкт-Петербург',
+      services: ['Промышленная уборка', 'Уборка складов', 'Дезинфекция'],
+      image: '/img/77244437-564d-4d89-a40e-5260a8a04ebc.jpg',
+      verified: true,
+      responseTime: '1 час',
+      completedOrders: 180
     },
     {
       id: 4,
-      name: 'Пылесос VacMaster Compact 1200',
-      type: 'vacuum',
-      brand: 'VacMaster',
-      power: '1200W',
-      price: '45 000 ₽',
-      image: '/img/99844afe-98ee-4caa-9aae-484a64438351.jpg',
-      description: 'Компактный пылесос для небольших помещений'
+      name: 'Эко Чистота',
+      rating: 4.6,
+      reviewCount: 134,
+      price: 'от 1 200 ₽',
+      specialization: 'Экологичная уборка',
+      city: 'Москва',
+      services: ['Эко уборка', 'Детские комнаты', 'Гипоаллергенная уборка'],
+      image: '/img/d9d294e4-a686-4a27-bf74-cb58022f97b2.jpg',
+      verified: false,
+      responseTime: '2 часа',
+      completedOrders: 280
     },
     {
       id: 5,
-      name: 'Поломойка CleanBot Compact',
-      type: 'scrubber',
-      brand: 'CleanBot',
-      power: '1000W',
-      price: '95 000 ₽',
-      image: '/img/629e9727-15b3-46d9-9f7d-c3c03f6a44dd.jpg',
-      description: 'Компактная поломоечная машина для средних помещений'
+      name: 'БизнесКлин',
+      rating: 4.9,
+      reviewCount: 203,
+      price: 'от 3 000 ₽',
+      specialization: 'Корпоративные клиенты',
+      city: 'Екатеринбург',
+      services: ['Офисная уборка', 'Клининг отелей', 'Уборка ресторанов'],
+      image: '/img/fede2a7f-2755-4d3d-80d9-d718dc51273a.jpg',
+      verified: true,
+      responseTime: '20 мин',
+      completedOrders: 650
     },
     {
       id: 6,
-      name: 'Экстрактор CarpetMax Standard',
-      type: 'extractor',
-      brand: 'CarpetMax',
-      power: '1300W',
-      price: '75 000 ₽',
-      image: '/img/af264972-8994-478d-97cf-fb07055cec57.jpg',
-      description: 'Стандартный экстрактор для регулярной чистки ковров'
+      name: 'Домашний Уют',
+      rating: 4.5,
+      reviewCount: 98,
+      price: 'от 1 800 ₽',
+      specialization: 'Жилые помещения',
+      city: 'Санкт-Петербург',
+      services: ['Регулярная уборка', 'Уборка после вечеринок', 'Мытье посуды'],
+      image: '/img/d9d294e4-a686-4a27-bf74-cb58022f97b2.jpg',
+      verified: true,
+      responseTime: '45 мин',
+      completedOrders: 390
     }
   ];
 
-  const filteredEquipment = equipment.filter(item => {
-    return (selectedType === 'all' || item.type === selectedType) &&
-           (selectedBrand === 'all' || item.brand === selectedBrand) &&
-           (selectedPower === 'all' || item.power === selectedPower);
+  const filteredCompanies = companies.filter(company => {
+    const matchesSearch = company.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         company.services.some(service => service.toLowerCase().includes(searchQuery.toLowerCase()));
+    const matchesService = selectedService === 'all' || company.specialization === selectedService;
+    const matchesCity = selectedCity === 'all' || company.city === selectedCity;
+    const matchesRating = selectedRating === 'all' || company.rating >= parseFloat(selectedRating);
+    const matchesPrice = selectedPrice === 'all' || 
+      (selectedPrice === 'budget' && parseInt(company.price.match(/\d+/)?.[0] || '0') < 2000) ||
+      (selectedPrice === 'medium' && parseInt(company.price.match(/\d+/)?.[0] || '0') >= 2000 && parseInt(company.price.match(/\d+/)?.[0] || '0') < 4000) ||
+      (selectedPrice === 'premium' && parseInt(company.price.match(/\d+/)?.[0] || '0') >= 4000);
+
+    return matchesSearch && matchesService && matchesCity && matchesRating && matchesPrice;
   });
 
-  const services = [
-    {
-      title: 'Техническая поддержка',
-      description: 'Консультации по выбору и эксплуатации оборудования',
-      icon: 'Headphones'
-    },
-    {
-      title: 'Сервисное обслуживание',
-      description: 'Профилактика и ремонт оборудования',
-      icon: 'Wrench'
-    },
-    {
-      title: 'Обучение персонала',
-      description: 'Курсы по работе с клининговым оборудованием',
-      icon: 'GraduationCap'
-    }
-  ];
+  const renderStars = (rating: number) => {
+    return Array.from({ length: 5 }, (_, i) => (
+      <Icon
+        key={i}
+        name="Star"
+        size={16}
+        className={`${i < Math.floor(rating) ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`}
+      />
+    ));
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -106,173 +133,279 @@ const Index = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-4">
-              <Icon name="Building2" size={32} className="text-blue-600" />
-              <h1 className="text-2xl font-bold text-gray-900">CleanTech Pro</h1>
+              <Icon name="Sparkles" size={32} className="text-purple-600" />
+              <h1 className="text-2xl font-bold text-gray-900">КлинингМаркет</h1>
             </div>
             <nav className="hidden md:flex space-x-8">
-              <a href="#catalog" className="text-gray-600 hover:text-blue-600 transition-colors">Каталог</a>
-              <a href="#services" className="text-gray-600 hover:text-blue-600 transition-colors">Услуги</a>
-              <a href="#delivery" className="text-gray-600 hover:text-blue-600 transition-colors">Доставка</a>
-              <a href="#certificates" className="text-gray-600 hover:text-blue-600 transition-colors">Сертификаты</a>
-              <a href="#about" className="text-gray-600 hover:text-blue-600 transition-colors">О компании</a>
-              <a href="#contacts" className="text-gray-600 hover:text-blue-600 transition-colors">Контакты</a>
+              <a href="#services" className="text-gray-600 hover:text-purple-600 transition-colors">Услуги</a>
+              <a href="#how-it-works" className="text-gray-600 hover:text-purple-600 transition-colors">Как это работает</a>
+              <a href="#for-business" className="text-gray-600 hover:text-purple-600 transition-colors">Для бизнеса</a>
+              <a href="#help" className="text-gray-600 hover:text-purple-600 transition-colors">Помощь</a>
             </nav>
-            <Button className="bg-blue-600 hover:bg-blue-700">
-              <Icon name="Phone" size={16} className="mr-2" />
-              +7 (495) 123-45-67
-            </Button>
+            <div className="flex items-center space-x-4">
+              <Button variant="outline">Войти</Button>
+              <Button className="bg-purple-600 hover:bg-purple-700">
+                Разместить услуги
+              </Button>
+            </div>
           </div>
         </div>
       </header>
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Профессиональное клининговое оборудование
-            </h2>
-            <p className="text-xl mb-8 max-w-3xl mx-auto">
-              Надежные решения для коммерческой уборки. Широкий выбор оборудования, 
-              качественный сервис и быстрая доставка по всей России
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100">
-                <Icon name="Catalog" fallback="Grid3x3" size={20} className="mr-2" />
-                Смотреть каталог
-              </Button>
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600">
-                <Icon name="Phone" size={20} className="mr-2" />
-                Получить консультацию
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Catalog Section */}
-      <section id="catalog" className="py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center mb-12">Каталог оборудования</h2>
+      <section className="bg-gradient-to-r from-purple-600 to-blue-600 text-white py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6">
+            Найдите идеальную клининговую компанию
+          </h2>
+          <p className="text-xl mb-8 max-w-3xl mx-auto">
+            Более 500 проверенных компаний. Сравнивайте цены, читайте отзывы и выбирайте лучших
+          </p>
           
-          {/* Filters */}
-          <div className="bg-white p-6 rounded-lg shadow-sm mb-8">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Тип оборудования</label>
-                <Select value={selectedType} onValueChange={setSelectedType}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Все типы</SelectItem>
-                    <SelectItem value="vacuum">Пылесосы</SelectItem>
-                    <SelectItem value="scrubber">Поломоечные машины</SelectItem>
-                    <SelectItem value="extractor">Экстракторы</SelectItem>
-                  </SelectContent>
-                </Select>
+          {/* Main Search */}
+          <div className="bg-white rounded-lg p-6 shadow-lg max-w-4xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+              <div className="relative">
+                <Icon name="Search" size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <Input 
+                  placeholder="Что нужно убрать?"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10"
+                />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Бренд</label>
-                <Select value={selectedBrand} onValueChange={setSelectedBrand}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Все бренды</SelectItem>
-                    <SelectItem value="VacMaster">VacMaster</SelectItem>
-                    <SelectItem value="CleanBot">CleanBot</SelectItem>
-                    <SelectItem value="CarpetMax">CarpetMax</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Мощность</label>
-                <Select value={selectedPower} onValueChange={setSelectedPower}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Любая мощность</SelectItem>
-                    <SelectItem value="1000W">1000W</SelectItem>
-                    <SelectItem value="1200W">1200W</SelectItem>
-                    <SelectItem value="1300W">1300W</SelectItem>
-                    <SelectItem value="1500W">1500W</SelectItem>
-                    <SelectItem value="1800W">1800W</SelectItem>
-                    <SelectItem value="2000W">2000W</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="flex items-end">
-                <Button 
-                  variant="outline" 
-                  onClick={() => {
-                    setSelectedType('all');
-                    setSelectedBrand('all');
-                    setSelectedPower('all');
-                  }}
-                  className="w-full"
-                >
-                  Сбросить фильтры
-                </Button>
-              </div>
+              <Select value={selectedCity} onValueChange={setSelectedCity}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Выберите город" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Все города</SelectItem>
+                  <SelectItem value="Москва">Москва</SelectItem>
+                  <SelectItem value="Санкт-Петербург">Санкт-Петербург</SelectItem>
+                  <SelectItem value="Екатеринбург">Екатеринбург</SelectItem>
+                  <SelectItem value="Новосибирск">Новосибирск</SelectItem>
+                </SelectContent>
+              </Select>
+              <Button size="lg" className="bg-purple-600 hover:bg-purple-700">
+                <Icon name="Search" size={20} className="mr-2" />
+                Найти
+              </Button>
             </div>
           </div>
+        </div>
+      </section>
 
-          {/* Equipment Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredEquipment.map((item) => (
-              <Card key={item.id} className="hover:shadow-lg transition-shadow">
-                <CardHeader className="p-0">
-                  <img 
-                    src={item.image} 
-                    alt={item.name}
-                    className="w-full h-48 object-cover rounded-t-lg"
-                  />
-                </CardHeader>
-                <CardContent className="p-6">
-                  <div className="flex justify-between items-start mb-4">
-                    <CardTitle className="text-lg">{item.name}</CardTitle>
-                    <Badge variant="secondary">{item.power}</Badge>
+      {/* Filters */}
+      <section className="py-6 bg-white border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <Select value={selectedService} onValueChange={setSelectedService}>
+              <SelectTrigger>
+                <SelectValue placeholder="Тип услуги" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Все услуги</SelectItem>
+                <SelectItem value="Квартиры и дома">Квартиры и дома</SelectItem>
+                <SelectItem value="Офисы и коммерция">Офисы и коммерция</SelectItem>
+                <SelectItem value="Промышленные объекты">Промышленные объекты</SelectItem>
+                <SelectItem value="Экологичная уборка">Экологичная уборка</SelectItem>
+              </SelectContent>
+            </Select>
+            
+            <Select value={selectedPrice} onValueChange={setSelectedPrice}>
+              <SelectTrigger>
+                <SelectValue placeholder="Цена" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Любая цена</SelectItem>
+                <SelectItem value="budget">До 2 000 ₽</SelectItem>
+                <SelectItem value="medium">2 000 - 4 000 ₽</SelectItem>
+                <SelectItem value="premium">От 4 000 ₽</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Select value={selectedRating} onValueChange={setSelectedRating}>
+              <SelectTrigger>
+                <SelectValue placeholder="Рейтинг" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Любой рейтинг</SelectItem>
+                <SelectItem value="4.5">4.5+ звезд</SelectItem>
+                <SelectItem value="4.7">4.7+ звезд</SelectItem>
+                <SelectItem value="4.8">4.8+ звезд</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Button variant="outline" onClick={() => {
+              setSearchQuery('');
+              setSelectedService('all');
+              setSelectedCity('all');
+              setSelectedRating('all');
+              setSelectedPrice('all');
+            }}>
+              Сбросить фильтры
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Results */}
+      <section className="py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center mb-6">
+            <h3 className="text-2xl font-bold text-gray-900">
+              Найдено {filteredCompanies.length} компаний
+            </h3>
+            <Select defaultValue="rating">
+              <SelectTrigger className="w-48">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="rating">По рейтингу</SelectItem>
+                <SelectItem value="price-low">Сначала дешевые</SelectItem>
+                <SelectItem value="price-high">Сначала дорогие</SelectItem>
+                <SelectItem value="reviews">По отзывам</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {filteredCompanies.map((company) => (
+              <Card key={company.id} className="hover:shadow-lg transition-shadow">
+                <CardHeader className="pb-4">
+                  <div className="flex items-start space-x-4">
+                    <img 
+                      src={company.image} 
+                      alt={company.name}
+                      className="w-24 h-24 object-cover rounded-lg"
+                    />
+                    <div className="flex-1">
+                      <div className="flex items-center space-x-2 mb-2">
+                        <CardTitle className="text-lg">{company.name}</CardTitle>
+                        {company.verified && (
+                          <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
+                            <Icon name="CheckCircle" size={12} className="mr-1" />
+                            Проверено
+                          </Badge>
+                        )}
+                      </div>
+                      <div className="flex items-center space-x-4 mb-2">
+                        <div className="flex items-center space-x-1">
+                          {renderStars(company.rating)}
+                          <span className="font-semibold ml-1">{company.rating}</span>
+                        </div>
+                        <span className="text-gray-500">({company.reviewCount} отзывов)</span>
+                      </div>
+                      <p className="text-gray-600">{company.specialization}</p>
+                      <div className="flex items-center space-x-4 mt-2 text-sm text-gray-500">
+                        <span className="flex items-center">
+                          <Icon name="MapPin" size={14} className="mr-1" />
+                          {company.city}
+                        </span>
+                        <span className="flex items-center">
+                          <Icon name="Clock" size={14} className="mr-1" />
+                          Ответ за {company.responseTime}
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                  <p className="text-gray-600 mb-4">{item.description}</p>
-                  <div className="flex justify-between items-center">
-                    <span className="text-2xl font-bold text-blue-600">{item.price}</span>
-                    <Badge variant="outline">{item.brand}</Badge>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <div className="mb-4">
+                    <div className="flex flex-wrap gap-2">
+                      {company.services.map((service, index) => (
+                        <Badge key={index} variant="outline" className="text-xs">
+                          {service}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="text-2xl font-bold text-purple-600">{company.price}</div>
+                      <div className="text-sm text-gray-500">{company.completedOrders} заказов выполнено</div>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button variant="outline" size="sm">
+                        <Icon name="Heart" size={16} />
+                      </Button>
+                      <Button size="sm" className="bg-purple-600 hover:bg-purple-700">
+                        Заказать
+                      </Button>
+                    </div>
                   </div>
                 </CardContent>
-                <CardFooter className="p-6 pt-0">
-                  <div className="flex gap-2 w-full">
-                    <Button className="flex-1 bg-blue-600 hover:bg-blue-700">
-                      <Icon name="ShoppingCart" size={16} className="mr-2" />
-                      В корзину
-                    </Button>
-                    <Button variant="outline">
-                      <Icon name="Heart" size={16} />
-                    </Button>
-                  </div>
-                </CardFooter>
               </Card>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Services Section */}
-      <section id="services" className="py-16 bg-white">
+      {/* How it works */}
+      <section id="how-it-works" className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center mb-12">Услуги и сервис</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {services.map((service, index) => (
-              <Card key={index} className="text-center hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <div className="mx-auto mb-4 p-3 bg-blue-100 rounded-full w-16 h-16 flex items-center justify-center">
-                    <Icon name={service.icon as any} size={32} className="text-blue-600" />
-                  </div>
-                  <CardTitle>{service.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600">{service.description}</p>
+          <h2 className="text-3xl font-bold text-center mb-12">Как это работает</h2>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            {[
+              {
+                step: '1',
+                title: 'Найдите услугу',
+                description: 'Используйте поиск и фильтры для выбора подходящей компании',
+                icon: 'Search'
+              },
+              {
+                step: '2',
+                title: 'Сравните предложения',
+                description: 'Изучите рейтинги, отзывы и цены разных исполнителей',
+                icon: 'Scale'
+              },
+              {
+                step: '3',
+                title: 'Оформите заказ',
+                description: 'Свяжитесь с исполнителем и обсудите детали работы',
+                icon: 'MessageCircle'
+              },
+              {
+                step: '4',
+                title: 'Получите результат',
+                description: 'Наслаждайтесь чистотой и оставьте отзыв о работе',
+                icon: 'CheckCircle'
+              }
+            ].map((item) => (
+              <div key={item.step} className="text-center">
+                <div className="mx-auto mb-4 p-4 bg-purple-100 rounded-full w-16 h-16 flex items-center justify-center">
+                  <Icon name={item.icon as any} size={32} className="text-purple-600" />
+                </div>
+                <div className="mb-2 text-sm font-semibold text-purple-600">ШАГ {item.step}</div>
+                <h3 className="text-lg font-bold mb-2">{item.title}</h3>
+                <p className="text-gray-600">{item.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Services Categories */}
+      <section id="services" className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-center mb-12">Популярные услуги</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {[
+              { name: 'Уборка квартир', icon: 'Home', count: '150+ компаний' },
+              { name: 'Офисная уборка', icon: 'Building', count: '80+ компаний' },
+              { name: 'После ремонта', icon: 'Hammer', count: '90+ компаний' },
+              { name: 'Мойка окон', icon: 'Droplets', count: '70+ компаний' },
+              { name: 'Химчистка мебели', icon: 'Sofa', fallback: 'Package', count: '45+ компаний' },
+              { name: 'Генеральная уборка', icon: 'Sparkles', count: '120+ компаний' },
+              { name: 'Уборка складов', icon: 'Package', count: '25+ компаний' },
+              { name: 'Клининг отелей', icon: 'Hotel', fallback: 'Building2', count: '30+ компаний' }
+            ].map((service) => (
+              <Card key={service.name} className="hover:shadow-md transition-shadow cursor-pointer">
+                <CardContent className="p-6 text-center">
+                  <Icon name={service.icon as any} fallback={service.fallback as any} size={40} className="text-purple-600 mx-auto mb-4" />
+                  <h3 className="font-semibold mb-2">{service.name}</h3>
+                  <p className="text-sm text-gray-500">{service.count}</p>
                 </CardContent>
               </Card>
             ))}
@@ -280,143 +413,30 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Info Sections */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Tabs defaultValue="delivery" className="w-full">
-            <TabsList className="grid w-full grid-cols-4">
-              <TabsTrigger value="delivery">Доставка и оплата</TabsTrigger>
-              <TabsTrigger value="certificates">Сертификаты</TabsTrigger>
-              <TabsTrigger value="about">О компании</TabsTrigger>
-              <TabsTrigger value="contacts">Контакты</TabsTrigger>
-            </TabsList>
-            <TabsContent value="delivery" className="mt-8">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <Icon name="Truck" size={24} className="mr-2 text-blue-600" />
-                    Доставка и оплата
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <h4 className="font-semibold mb-2">Способы доставки:</h4>
-                      <ul className="space-y-2 text-gray-600">
-                        <li>• Курьерская доставка по Москве - от 500 ₽</li>
-                        <li>• Транспортными компаниями по России - от 1 000 ₽</li>
-                        <li>• Самовывоз с нашего склада - бесплатно</li>
-                        <li>• Доставка крупногабаритного оборудования - по договоренности</li>
-                      </ul>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold mb-2">Способы оплаты:</h4>
-                      <ul className="space-y-2 text-gray-600">
-                        <li>• Банковские карты</li>
-                        <li>• Безналичный расчет для юридических лиц</li>
-                        <li>• Рассрочка до 12 месяцев</li>
-                        <li>• Лизинг оборудования</li>
-                      </ul>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-            <TabsContent value="certificates" className="mt-8">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <Icon name="Award" size={24} className="mr-2 text-blue-600" />
-                    Сертификаты качества
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600 mb-4">
-                    Вся наша продукция имеет необходимые сертификаты качества и соответствует российским стандартам.
-                  </p>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <Badge variant="outline" className="justify-center p-3">ISO 9001</Badge>
-                    <Badge variant="outline" className="justify-center p-3">CE</Badge>
-                    <Badge variant="outline" className="justify-center p-3">ГОСТ Р</Badge>
-                    <Badge variant="outline" className="justify-center p-3">EAC</Badge>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-            <TabsContent value="about" className="mt-8">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <Icon name="Building2" size={24} className="mr-2 text-blue-600" />
-                    О компании CleanTech Pro
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <p className="text-gray-600">
-                    Более 10 лет мы специализируемся на поставке профессионального клинингового оборудования 
-                    для коммерческих предприятий по всей России.
-                  </p>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div className="text-center">
-                      <div className="text-3xl font-bold text-blue-600 mb-2">1000+</div>
-                      <div className="text-gray-600">Довольных клиентов</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-3xl font-bold text-blue-600 mb-2">10</div>
-                      <div className="text-gray-600">Лет на рынке</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-3xl font-bold text-blue-600 mb-2">50+</div>
-                      <div className="text-gray-600">Видов оборудования</div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-            <TabsContent value="contacts" className="mt-8">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <Icon name="MapPin" size={24} className="mr-2 text-blue-600" />
-                    Контактная информация
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-4">
-                      <div className="flex items-center space-x-3">
-                        <Icon name="Phone" size={20} className="text-blue-600" />
-                        <span>+7 (495) 123-45-67</span>
-                      </div>
-                      <div className="flex items-center space-x-3">
-                        <Icon name="Mail" size={20} className="text-blue-600" />
-                        <span>info@cleantech-pro.ru</span>
-                      </div>
-                      <div className="flex items-center space-x-3">
-                        <Icon name="MapPin" size={20} className="text-blue-600" />
-                        <span>Москва, ул. Промышленная, д. 25, стр. 3</span>
-                      </div>
-                      <div className="flex items-center space-x-3">
-                        <Icon name="Clock" size={20} className="text-blue-600" />
-                        <span>Пн-Пт: 9:00-18:00, Сб: 10:00-16:00</span>
-                      </div>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold mb-4">Напишите нам</h4>
-                      <div className="space-y-3">
-                        <Input placeholder="Ваше имя" />
-                        <Input placeholder="Телефон" />
-                        <Input placeholder="Email" />
-                        <Button className="w-full bg-blue-600 hover:bg-blue-700">
-                          Отправить запрос
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
+      {/* For Business */}
+      <section id="for-business" className="py-16 bg-purple-600 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl font-bold mb-6">Для клининговых компаний</h2>
+          <p className="text-xl mb-8 max-w-2xl mx-auto">
+            Получайте больше заказов, размещая свои услуги на нашей платформе
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+            <div>
+              <div className="text-3xl font-bold mb-2">500+</div>
+              <div>Активных заказчиков ежедневно</div>
+            </div>
+            <div>
+              <div className="text-3xl font-bold mb-2">0₽</div>
+              <div>Размещение профиля бесплатно</div>
+            </div>
+            <div>
+              <div className="text-3xl font-bold mb-2">24/7</div>
+              <div>Поддержка исполнителей</div>
+            </div>
+          </div>
+          <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-100">
+            Начать зарабатывать
+          </Button>
         </div>
       </section>
 
@@ -426,42 +446,53 @@ const Index = () => {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center space-x-2 mb-4">
-                <Icon name="Building2" size={24} className="text-blue-400" />
-                <span className="text-xl font-bold">CleanTech Pro</span>
+                <Icon name="Sparkles" size={24} className="text-purple-400" />
+                <span className="text-xl font-bold">КлинингМаркет</span>
               </div>
-              <p className="text-gray-400">
-                Профессиональное клининговое оборудование для вашего бизнеса
+              <p className="text-gray-400 mb-4">
+                Крупнейший маркетплейс клининговых услуг в России
               </p>
+              <div className="flex space-x-4">
+                <Button variant="ghost" size="sm" className="p-0">
+                  <Icon name="Facebook" size={20} />
+                </Button>
+                <Button variant="ghost" size="sm" className="p-0">
+                  <Icon name="Instagram" size={20} />
+                </Button>
+                <Button variant="ghost" size="sm" className="p-0">
+                  <Icon name="Twitter" size={20} />
+                </Button>
+              </div>
             </div>
             <div>
-              <h4 className="font-semibold mb-4">Каталог</h4>
+              <h4 className="font-semibold mb-4">Для клиентов</h4>
               <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors">Пылесосы</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Поломоечные машины</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Экстракторы</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Аксессуары</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Найти услугу</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Гарантии</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Отзывы</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Помощь</a></li>
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold mb-4">Компания</h4>
+              <h4 className="font-semibold mb-4">Для исполнителей</h4>
               <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors">О нас</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Сервис</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Доставка</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Контакты</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Разместить услуги</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Тарифы</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Школа клининга</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Поддержка</a></li>
               </ul>
             </div>
             <div>
               <h4 className="font-semibold mb-4">Контакты</h4>
               <ul className="space-y-2 text-gray-400">
-                <li>+7 (495) 123-45-67</li>
-                <li>info@cleantech-pro.ru</li>
-                <li>Пн-Пт: 9:00-18:00</li>
+                <li>8 (800) 555-0123</li>
+                <li>help@cleaningmarket.ru</li>
+                <li>Пн-Вс: 8:00-22:00</li>
               </ul>
             </div>
           </div>
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 CleanTech Pro. Все права защищены.</p>
+            <p>&copy; 2024 КлинингМаркет. Все права защищены.</p>
           </div>
         </div>
       </footer>
